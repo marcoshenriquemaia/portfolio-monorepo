@@ -6,12 +6,17 @@ services:
       context: .
       dockerfile: Dockerfile
     restart: unless-stopped
+    ports:
+      - 3000:3000
+      - 3001:3001
+      - 3002:3002
+      - 3003:3003
     environment:
-      RABBITMQ_HOST: "rabbitmq"
+      RABBITMQ_HOST: rabbitmq
       RABBITMQ_PORT: 5672
-      RABBITMQ_USER: "guest"
-      RABBITMQ_PASS: "guest"
-      REDIS_HOST: "redis"
+      RABBITMQ_USER: guest
+      RABBITMQ_PASS: guest
+      REDIS_HOST: redis
       REDIS_PORT: 6379
       GATEWAY_PORT: 3000
       WORLD_PORT: 3001
@@ -24,6 +29,7 @@ services:
       - ./:/app
     networks:
       - my-network
+    command: sh -c "sleep 10 && npm run start:all"
 
   rabbitmq:
     container_name: rabbitmq
@@ -35,8 +41,9 @@ services:
       - my-network
     volumes:
       - /var/lib/rabbitmq
-    env_file:
-      - ./apps/rabbitmq/rabbitmq.env
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
 
   redis:
     image: redis:latest

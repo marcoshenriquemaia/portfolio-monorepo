@@ -1,16 +1,31 @@
 import { NestFactory } from '@nestjs/core';
-import { WorldModule } from './world.module';
+import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
+import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 
 async function bootstrap() {
   const configService = new ConfigService();
 
-  // const port = configService.get('WORLD_PORT');
-  const port = 3003;
+  const USER = configService.get('RABBITMQ_USER');
+  const PASSWORD = configService.get('RABBITMQ_PASS');
+  const HOST = configService.get('RABBITMQ_HOST');
+  const PORT = configService.get('RABBITMQ_PORT');
+  const QUEUE = 'world';
 
-  console.log('bleeeee');
+  const app = await NestFactory.createMicroservice<MicroserviceOptions>(
+    AppModule,
+    {
+      transport: Transport.RMQ,
+      options: {
+        urls: [`amqp://${USER}:${PASSWORD}@${HOST}:${PORT}`],
+        queue: QUEUE,
+        queueOptions: {
+          durable: true,
+        },
+      },
+    },
+  );
 
-  const app = await NestFactory.create(WorldModule);
-  await app.listen(port);
+  await app.listen();
 }
 bootstrap();

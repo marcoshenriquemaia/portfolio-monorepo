@@ -28,24 +28,6 @@
         "tsConfigPath": "apps/world/tsconfig.app.json"
       }
     },
-    "redis": {
-      "type": "application",
-      "root": "apps/redis",
-      "entryFile": "main",
-      "sourceRoot": "apps/redis/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/redis/tsconfig.app.json"
-      }
-    },
-    "rabbitmq": {
-      "type": "application",
-      "root": "apps/rabbitmq",
-      "entryFile": "main",
-      "sourceRoot": "apps/rabbitmq/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/rabbitmq/tsconfig.app.json"
-      }
-    },
     "core": {
       "type": "library",
       "root": "libs/core",
