@@ -1,15 +1,17 @@
 import { WebSocketGateway, SubscribeMessage } from '@nestjs/websockets';
-import { RabbitMQService } from '../rabbitmq/rabbitmq.service';
-import { WalkPayload } from './interfaces/payload';
+import { AMQPAbstract, WalkDto } from '@libs/core';
 
 @WebSocketGateway()
 export class EventsGateway {
-  constructor(private rabbit: RabbitMQService) {}
+  constructor(private rabbit: AMQPAbstract) {}
 
   handleConnection(client: any) {
-    const clientId = client.id;
-
-    this.rabbit.sendEvent('rpg.world.connect', { clientId });
+    this.rabbit.sendEvent('rpg.world.connect', {
+      id: client.id,
+      name: 'teste',
+      position: { x: 0, y: 0 },
+      status: 'idle',
+    });
   }
 
   handleDisconnect(client: any) {
@@ -19,7 +21,7 @@ export class EventsGateway {
   }
 
   @SubscribeMessage('walk')
-  handleWalk(client: any, payload: WalkPayload) {
+  handleWalk(client: any, payload: WalkDto) {
     const clientId = client.id;
 
     console.log('LOG:', 'clientId', clientId);

@@ -2,8 +2,9 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { RabbitMQService } from './rabbitmq/rabbitmq.service';
+import { RabbitMQService } from '../../../libs/core/src/rabbitmq/rabbitmq.service';
 import { EventsGateway } from './events/events.gateway';
+import { AMQPAbstract } from '@libs/core';
 
 @Module({
   imports: [
@@ -22,6 +23,13 @@ import { EventsGateway } from './events/events.gateway';
     ]),
   ],
   controllers: [AppController],
-  providers: [AppService, RabbitMQService, EventsGateway],
+  providers: [
+    AppService,
+    {
+      provide: AMQPAbstract,
+      useClass: RabbitMQService,
+    },
+    EventsGateway,
+  ],
 })
 export class AppModule {}

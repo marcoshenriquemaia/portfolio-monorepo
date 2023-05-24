@@ -1,5 +1,10 @@
 {
   "cSpell.words": [
+    "dtos",
+    "hget",
+    "hgetall",
+    "hmset",
+    "hset",
     "nestjs",
     "rabbitmq",
     "Rabbitmq",
