@@ -1,0 +1,54 @@
+version: '3'
+
+services:
+  apps:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    environment:
+      RABBITMQ_HOST: "rabbitmq"
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USER: "guest"
+      RABBITMQ_PASS: "guest"
+      REDIS_HOST: "redis"
+      REDIS_PORT: 6379
+      GATEWAY_PORT: 3000
+      WORLD_PORT: 3001
+      REDIS_MICROSERVICE_PORT: 3002
+      RABBITMQ_MICROSERVICE_PORT: 3003
+    depends_on:
+      - redis
+      - rabbitmq
+    volumes:
+      - ./:/app
+    networks:
+      - my-network
+
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:3-management
+    ports:
+      - 5672:5672
+      - 15672:15672
+    networks:
+      - my-network
+    volumes:
+      - /var/lib/rabbitmq
+    env_file:
+      - ./apps/rabbitmq/rabbitmq.env
+
+  redis:
+    image: redis:latest
+    restart: unless-stopped
+    ports:
+      - 6379:6379
+    networks:
+      - my-network
+
+volumes:
+  data:
+
+
+networks:
+  my-network:
