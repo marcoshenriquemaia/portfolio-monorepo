@@ -47,7 +47,7 @@ services:
 
   redis:
     image: redis:latest
-    restart: unless-stopped
+    restart: always
     ports:
       - 6379:6379
     networks:

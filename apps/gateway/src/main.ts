@@ -8,6 +8,7 @@ async function bootstrap() {
   const PORT = configService.get('GATEWAY_PORT');
 
   const app = await NestFactory.create(AppModule);
+
   await app.listen(PORT);
 }
 

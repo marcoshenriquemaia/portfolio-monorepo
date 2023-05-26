@@ -1,35 +1,30 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { ClientsModule, Transport } from '@nestjs/microservices';
 import { RabbitMQService } from '../../../libs/core/src/rabbitmq/rabbitmq.service';
 import { EventsGateway } from './events/events.gateway';
-import { AMQPAbstract } from '@libs/core';
+import {
+  AMQPAbstract,
+  RedisService,
+  RedisUserRepository,
+  UserRepositoryAbstract,
+} from '@libs/core';
+import { PubSubLoop } from './pubSubLoop/pubsub';
+import { worldRabbitmqClient } from '@libs/core/registers';
 
 @Module({
-  imports: [
-    ClientsModule.register([
-      {
-        name: 'RABBITMQ_SERVICE',
-        transport: Transport.RMQ,
-        options: {
-          urls: [
-            `amqp://${process.env.RABBITMQ_USER}:${process.env.RABBITMQ_PASS}@${process.env.RABBITMQ_HOST}`,
-          ],
-          queue: 'world',
-          queueOptions: { durable: true },
-        },
-      },
-    ]),
-  ],
-  controllers: [AppController],
+  imports: [worldRabbitmqClient],
+  controllers: [],
   providers: [
-    AppService,
+    RedisService,
     {
       provide: AMQPAbstract,
       useClass: RabbitMQService,
     },
+    {
+      provide: UserRepositoryAbstract,
+      useClass: RedisUserRepository,
+    },
     EventsGateway,
+    PubSubLoop,
   ],
 })
 export class AppModule {}

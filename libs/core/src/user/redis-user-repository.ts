@@ -11,18 +11,35 @@ export class RedisUserRepository implements UserRepositoryAbstract {
   constructor(private readonly redisService: RedisService) {}
 
   async get(id: string): Promise<User> {
-    const user = await this.redisService.hgetall(`user_${id}`);
+    const user = await this.redisService.hmget(id, 'position', 'name', 'id');
 
-    return user as unknown as User;
+    const formattedUser = {
+      id: user[2],
+      name: user[1],
+      position: JSON.parse(user[0]),
+    };
+
+    return formattedUser as User;
   }
 
   async create(user: User): Promise<User> {
-    await this.redisService.hmset(`user_${user.id}`, user);
+    await this.redisService.hmset(`user_${user.id}`, {
+      ...user,
+      position: JSON.stringify(user.position),
+    });
     return user;
   }
 
   async update(id: string, user: UpdateUserDto): Promise<'OK'> {
-    await this.redisService.hmset(`user_${id}`, user);
+    const userExists = await this.get(`user_${id}`);
+
+    await this.redisService.hmset(`user_${id}`, {
+      ...userExists,
+      position: user.position
+        ? JSON.stringify(user.position)
+        : userExists.position,
+    });
+
     return 'OK';
   }
 
@@ -32,19 +49,13 @@ export class RedisUserRepository implements UserRepositoryAbstract {
 
   async findAll(): Promise<User[]> {
     const userKeys = await this.redisService.keys('user_*');
-    const pipeline = this.redisService.pipeline();
 
-    for (const key of userKeys) {
-      pipeline.hgetall(key);
-    }
-
-    const results = await pipeline.exec();
     const users: User[] = [];
 
-    for (const [, user] of results) {
-      if (user) {
-        users.push(user as User);
-      }
+    for (const key of userKeys) {
+      const user = await this.get(key);
+
+      users.push(user);
     }
 
     return users;

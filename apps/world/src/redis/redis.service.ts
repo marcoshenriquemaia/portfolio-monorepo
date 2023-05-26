@@ -5,7 +5,7 @@ import { Redis } from 'ioredis';
 export class RedisService extends Redis {
   constructor() {
     super({
-      host: 'localhost',
+      host: process.env.REDIS_HOST,
       port: 6379,
     });
 

@@ -12,9 +12,4 @@ export class AppController {
   handleDisconnect() {
     console.log('teste event pattern disconnect');
   }
-
-  @EventPattern('rpg.world.walk')
-  handleWalk() {
-    console.log('teste event pattern');
-  }
 }
