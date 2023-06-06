@@ -11,12 +11,21 @@ export class RedisUserRepository implements UserRepositoryAbstract {
   constructor(private readonly redisService: RedisService) {}
 
   async get(id: string): Promise<User> {
-    const user = await this.redisService.hmget(id, 'position', 'name', 'id');
+    const user = await this.redisService.hmget(
+      id,
+      'position',
+      'name',
+      'id',
+      'status',
+      'direction',
+    );
 
     const formattedUser = {
       id: user[2],
       name: user[1],
       position: JSON.parse(user[0]),
+      status: user[3],
+      direction: user[4],
     };
 
     return formattedUser as User;
@@ -35,9 +44,10 @@ export class RedisUserRepository implements UserRepositoryAbstract {
 
     await this.redisService.hmset(`user_${id}`, {
       ...userExists,
+      ...user,
       position: user.position
         ? JSON.stringify(user.position)
-        : userExists.position,
+        : JSON.stringify(userExists.position),
     });
 
     return 'OK';

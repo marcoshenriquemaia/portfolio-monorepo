@@ -15,6 +15,7 @@ export class EventsGateway {
       name: 'teste',
       position: { x: 0, y: 0 },
       status: 'idle',
+      direction: 'down',
     });
 
     this.pubSubLoop.subscribe(client);

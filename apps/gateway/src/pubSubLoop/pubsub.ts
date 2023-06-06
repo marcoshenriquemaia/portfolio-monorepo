@@ -25,8 +25,6 @@ export class PubSubLoop {
 
     const userList = await this.userRepository.findAll();
 
-    console.log('CUSTOM_LOG:', 'userList', userList);
-
     for (const client of this.subscribers) {
       client.emit('world:update', {
         userList,

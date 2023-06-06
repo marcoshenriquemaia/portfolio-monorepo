@@ -35,10 +35,10 @@ export class UserController {
       down: { x: 0, y: 1 },
       left: { x: -1, y: 0 },
       right: { x: 1, y: 0 },
-      'up-left': { x: -1, y: -1 },
-      'up-right': { x: 1, y: -1 },
-      'down-left': { x: -1, y: 1 },
-      'down-right': { x: 1, y: 1 },
+      'up-left': { x: -0.8, y: -0.8 },
+      'up-right': { x: 0.8, y: -0.8 },
+      'down-left': { x: -0.8, y: 0.8 },
+      'down-right': { x: 0.8, y: 0.8 },
     };
 
     const user = await this.userRepository.get(`user_${clientId}`);
@@ -61,6 +61,8 @@ export class UserController {
 
       await this.userRepository.update(clientId, {
         position: newPosition,
+        status: 'walk',
+        direction,
       });
     }
   }
@@ -68,7 +70,6 @@ export class UserController {
   @EventPattern('rpg.world.stop')
   async handleStop({ clientId }: { clientId: string }) {
     const user = await this.userRepository.get(`user_${clientId}`);
-
     if (user) {
       await this.userRepository.update(clientId, {
         status: 'idle',

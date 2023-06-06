@@ -1,4 +1,4 @@
 export enum GameConfig {
-  userSpeed = 30, //px/15ms
-  tickRate = 15, //ms
+  userSpeed = 5, //px/15ms
+  tickRate = 16, //ms
 }
