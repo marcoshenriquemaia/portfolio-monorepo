@@ -12,6 +12,11 @@ async function bootstrap() {
   const PORT = configService.get('RABBITMQ_PORT');
   const QUEUE = 'world';
 
+  console.log('CUSTOM_LOG:', 'USER', USER);
+  console.log('CUSTOM_LOG:', 'PASSWORD', PASSWORD);
+  console.log('CUSTOM_LOG:', 'HOST', HOST);
+  console.log('CUSTOM_LOG:', 'PORT', PORT);
+
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
     AppModule,
     {

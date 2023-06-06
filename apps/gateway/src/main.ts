@@ -7,6 +7,8 @@ async function bootstrap() {
 
   const PORT = configService.get('GATEWAY_PORT');
 
+  console.log('CUSTOM_LOG:', 'PORT', PORT);
+
   const app = await NestFactory.create(AppModule);
 
   await app.listen(PORT);
