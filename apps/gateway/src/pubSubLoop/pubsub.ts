@@ -1,10 +1,14 @@
 import { GameConfig, UserRepositoryAbstract } from '@libs/core';
 import { Injectable } from '@nestjs/common';
+import { EmitterGateway } from '../events/emitter.gateway';
 
 @Injectable()
 export class PubSubLoop {
   private readonly subscribers = [];
-  constructor(private readonly userRepository: UserRepositoryAbstract) {
+  constructor(
+    private readonly userRepository: UserRepositoryAbstract,
+    private readonly webSocketEmitter: EmitterGateway,
+  ) {
     setInterval(this.loop, GameConfig.tickRate);
   }
 
@@ -25,10 +29,8 @@ export class PubSubLoop {
 
     const userList = await this.userRepository.findAll();
 
-    for (const client of this.subscribers) {
-      client.emit('world:update', {
-        userList,
-      });
-    }
+    this.webSocketEmitter.toEveryone('world:update', {
+      userList,
+    });
   };
 }

@@ -28,7 +28,7 @@ services:
       - ./:/app
     networks:
       - my-network
-    command: sh -c "sleep 10 && npm run start:all"
+    command: sh -c "sleep 10 && npm run build:all && npm run start:prod:all"
 
   rabbitmq:
     container_name: rabbitmq

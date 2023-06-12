@@ -7,6 +7,10 @@ export class RedisService extends Redis {
     super({
       host: process.env.REDIS_HOST,
       port: Number(process.env.REDIS_PORT),
+      password: process.env.REDIS_PASS,
+      // host: 'redis-18109.c10.us-east-1-2.ec2.cloud.redislabs.com',
+      // port: 18109,
+      // password: 'asozbrtc0tPZ5sf3OsBc2LbZ5IiCzq4Z',
     });
 
     super.on('connect', () => {

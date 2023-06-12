@@ -1,4 +1,8 @@
-import { WebSocketGateway, SubscribeMessage } from '@nestjs/websockets';
+import {
+  WebSocketGateway,
+  SubscribeMessage,
+  WebSocketServer,
+} from '@nestjs/websockets';
 import { AMQPAbstract, Directions } from '@libs/core';
 import { PubSubLoop } from '../pubSubLoop/pubsub';
 

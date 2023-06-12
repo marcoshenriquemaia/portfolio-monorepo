@@ -9,11 +9,13 @@ import {
 } from '@libs/core';
 import { PubSubLoop } from './pubSubLoop/pubsub';
 import { worldRabbitmqClient } from '@libs/core/registers';
+import { EmitterGateway } from './events/emitter.gateway';
 
 @Module({
   imports: [worldRabbitmqClient],
   controllers: [],
   providers: [
+    EventsGateway,
     RedisService,
     {
       provide: AMQPAbstract,
@@ -23,8 +25,8 @@ import { worldRabbitmqClient } from '@libs/core/registers';
       provide: UserRepositoryAbstract,
       useClass: RedisUserRepository,
     },
-    EventsGateway,
     PubSubLoop,
+    EmitterGateway,
   ],
 })
 export class AppModule {}
